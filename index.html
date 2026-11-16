@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>중화 반응 모형 — 염산 + 수산화 나트륨 수용액</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f3f5f8; --card:#ffffff; --line:#dce2ea;
+    --ink:#1f2933; --ink-2:#52606d; --ink-3:#8794a3; --soft:#f5f7fa;
+    --H:#9aa5b1; --Cl:#2f9a3c; --Na:#e2b300; --OH:#b2479b; --W:#1d9fd6;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Noto Sans KR",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .f{font-family:"Noto Sans KR",sans-serif;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1680px;margin:0 auto;padding:28px 24px 40px}
+  header{margin-bottom:16px}
+  .course{font-size:14px;color:var(--ink-2);margin:0 0 6px}
+  h1{font-size:26px;font-weight:700;margin:0 0 6px;letter-spacing:-0.01em}
+  .sub{margin:0;color:var(--ink-2);font-size:15px;line-height:1.6}
+
+  .tabs{display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--card);margin-bottom:16px}
+  .tabs button{font:inherit;font-size:15px;padding:10px 22px;border:0;background:transparent;color:var(--ink-2);cursor:pointer;border-right:1px solid var(--line)}
+  .tabs button:last-child{border-right:0}
+  .tabs button[aria-selected="true"]{background:var(--ink);color:#fff}
+  [hidden]{display:none !important}
+
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .stage{padding:12px 12px 14px}
+  #cv{display:block;width:100%;height:auto;max-width:600px;margin:0 auto}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;justify-content:center;margin-top:6px;font-size:14px;color:var(--ink-2)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .legend .nm{color:var(--ink-3);font-size:13px}
+  .note{margin:12px auto 0;max-width:600px;font-size:13px;color:var(--ink-2);background:var(--soft);
+    border-left:3px solid var(--ink-3);padding:8px 12px;border-radius:0 8px 8px 0;line-height:1.55}
+
+  aside{display:flex;flex-direction:column;gap:14px}
+  h2{font-size:16px;font-weight:700;margin:0 0 12px;color:var(--ink)}
+  .h2row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .h2row h2{margin:0}
+  .hint{font-size:13px;color:var(--ink-3);margin:10px 0 0;line-height:1.5}
+
+  .seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{font:inherit;font-size:15px;padding:10px 0;border:0;background:transparent;color:var(--ink-2);cursor:pointer;
+    border-right:1px solid var(--line);transition:background .15s,color .15s}
+  .seg button:last-child{border-right:0}
+  .seg button:hover{background:#eef2f6}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+  .seg button:disabled{cursor:not-allowed;opacity:.5}
+  .seg.sm button{font-size:13px;padding:6px 12px}
+  .seg.sm{display:inline-grid;grid-template-columns:repeat(3,auto)}
+
+  .cmp{display:grid;gap:10px}
+  .cmp-row{display:grid;grid-template-columns:118px 1fr;align-items:center;gap:10px;font-size:14px}
+  .cmp-row .name{color:var(--ink-2);line-height:1.3}
+  .cmp-row .name b{font-weight:500;color:var(--ink)}
+  .tokens{display:flex;flex-wrap:wrap;gap:2px;min-height:48px;align-items:center;
+    background:var(--soft);border:1px dashed var(--line);border-radius:8px;padding:5px 7px}
+  .tokens svg{display:block}
+
+  .actions{display:grid;grid-template-columns:1fr auto;gap:8px}
+  .btn{font:inherit;font-size:16px;border-radius:10px;padding:13px 14px;cursor:pointer;border:1px solid var(--ink);
+    transition:transform .12s ease, background .15s}
+  .btn:active:not(:disabled){transform:scale(.97)}
+  .btn-main{background:var(--ink);color:#fff}
+  .btn-main:hover:not(:disabled){background:#323f4b}
+  .btn-sub{background:transparent;color:var(--ink);border-color:var(--line);font-size:14px}
+  .btn-sub:hover{background:#eef2f6}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+
+  .status{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+  .stat{background:var(--soft);border-radius:8px;padding:8px 10px}
+  .stat .k{font-size:12px;color:var(--ink-3)}
+  .stat .v{font-size:18px;margin-top:2px}
+  .stat .v small{font-size:13px;color:var(--ink-2)}
+
+  .bars{display:grid;gap:9px}
+  .bar{display:grid;grid-template-columns:96px 1fr 26px;align-items:center;gap:10px;font-size:14px}
+  .bar .lab{display:flex;align-items:center;gap:6px;font-family:"Noto Sans KR",sans-serif;font-size:15px}
+  .track{height:14px;background:#e9edf2;border-radius:7px;overflow:hidden}
+  .fill{height:100%;border-radius:7px;width:0;transition:width .5s cubic-bezier(.2,.7,.2,1)}
+  .bar .n{text-align:right;font-variant-numeric:tabular-nums}
+  .divider{height:1px;background:var(--line);margin:4px 0}
+  .chartc{display:block;width:100%;height:auto}
+  .clegend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px;color:var(--ink-2);margin-top:8px}
+  .clegend i{display:inline-block;width:14px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+  .clegend i.sq{width:11px;height:11px;border-radius:3px;border:1px solid rgba(0,0,0,.15)}
+  .ccap{font-size:12px;color:var(--ink-3);margin:8px 0 0}
+
+  /* 농도 설정 */
+  .layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}
+  .side{position:sticky;top:16px}
+  .settings{display:grid;gap:18px}
+  @media (max-width:1100px){.layout{grid-template-columns:1fr}.side{position:static}}
+  .set-row{display:grid;gap:8px;margin-bottom:14px}
+  .side .cmp-row{grid-template-columns:96px 1fr}
+  .set-row:last-of-type{margin-bottom:0}
+  .set-name{font-size:15px;font-weight:500}
+  .set-name small{display:block;font-size:12px;color:var(--ink-3)}
+  .settings h2{margin-bottom:12px}
+  .tempbox{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+  #tempCv{display:block;width:100%;height:auto;max-width:900px;margin:0 auto}
+
+  /* 단계별 비교 */
+  .ctrl{display:grid;grid-template-columns:auto 1fr;gap:12px 18px;align-items:center}
+  @media (max-width:760px){.ctrl{grid-template-columns:1fr}}
+  .ctrl .lbl{font-size:14px;color:var(--ink-2)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font:inherit;font-size:14px;padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink-2);cursor:pointer}
+  .chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+  .chip .f{font-size:14px}
+  .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .switch{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--ink-2);cursor:pointer;user-select:none}
+  .switch input{width:18px;height:18px;accent-color:var(--ink)}
+  .snaps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-top:16px}
+  .snap{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+  .snap .t{display:flex;align-items:baseline;gap:8px;margin-bottom:4px}
+  .snap .t b{font-weight:700;font-size:18px}
+  .snap .t span{font-size:14px;color:var(--ink-2)}
+  .snap canvas{display:block;width:100%;height:auto}
+  .snap .mix{font-size:13px;color:var(--ink-2);line-height:1.45;min-height:38px}
+  .snap .cnt{display:grid;grid-template-columns:repeat(5,1fr);gap:2px;margin-top:6px;text-align:center;font-size:14px}
+  .snap .cnt div{display:flex;flex-direction:column;align-items:center}
+  .snap .nat{margin-top:6px;text-align:center;font-size:14px;color:var(--ink-2)}
+  .snap .nat b{font-weight:400;color:var(--ink)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="course">통합과학 · 산과 염기의 반응</p>
+    <h1>묽은 염산에 수산화 나트륨 수용액을 조금씩 넣으면?</h1>
+    <p class="sub">묽은 염산 <span class="f">20 mL</span>에 수산화 나트륨 수용액을 <span class="f">5 mL</span>씩 넣으며 이온 모형의 변화를 관찰해 보세요. 비커에는 BTB 용액이 들어 있어요.</p>
+  </header>
+
+  <div class="layout">
+  <aside class="side">
+  <section class="card settings">
+    <div>
+      <h2>① 두 용액의 농도</h2>
+      <div class="set-row">
+        <span class="set-name">묽은 염산<small>처음 비커에 20 mL</small></span>
+        <div class="seg" id="segA">
+          <button data-v="1" aria-pressed="true">1배</button>
+          <button data-v="2" aria-pressed="false">2배</button>
+          <button data-v="3" aria-pressed="false">3배</button>
+        </div>
+      </div>
+      <div class="set-row">
+        <span class="set-name">수산화 나트륨 수용액<small>5 mL씩 넣음</small></span>
+        <div class="seg" id="segB">
+          <button data-v="1" aria-pressed="true">1배</button>
+          <button data-v="2" aria-pressed="false">2배</button>
+          <button data-v="3" aria-pressed="false">3배</button>
+        </div>
+      </div>
+      <p class="hint">기준 농도에 대한 배수예요. 농도를 바꾸면 처음 상태로 돌아갑니다.</p>
+    </div>
+    <div class="cmp">
+      <div class="cmp-row">
+        <div class="name"><b>묽은 염산</b><br><span class="f">5 mL</span> 속</div>
+        <div class="tokens" id="tokHCl"></div>
+      </div>
+      <div class="cmp-row">
+        <div class="name"><b>수산화 나트륨</b><br>수용액 <span class="f">5 mL</span> 속</div>
+        <div class="tokens" id="tokNaOH"></div>
+      </div>
+    </div>
+  </section>
+  </aside>
+
+  <main>
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-mode="exp">실험하기</button>
+    <button role="tab" aria-selected="false" data-mode="cmp">단계별 비교</button>
+  </div>
+
+  <!-- ===== 실험하기 ===== -->
+  <div class="grid" id="expView">
+    <section class="card stage">
+      <canvas id="cv" aria-label="중화 반응 이온 모형 비커"></canvas>
+      <div class="legend" id="legend"></div>
+      <p class="note">※ 모형의 개수는 실제 입자 수가 아니라, 이온 수의 <b>상대적인 비</b>를 나타낸 것입니다.</p>
+    </section>
+
+    <aside>
+      <div class="card">
+        <h2>② 수산화 나트륨 수용액 넣기</h2>
+        <div class="actions">
+          <button class="btn btn-main" id="addBtn">5 mL 넣기</button>
+          <button class="btn btn-sub" id="resetBtn">처음부터</button>
+        </div>
+        <div class="status">
+          <div class="stat"><div class="k">넣은 부피</div><div class="v f" id="sAdded">0 <small>mL</small></div></div>
+          <div class="stat"><div class="k">혼합 용액</div><div class="v f" id="sTotal">30 <small>mL</small></div></div>
+          <div class="stat"><div class="k">액성</div><div class="v" id="sNature">산성</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="h2row">
+          <h2>③ 비커 속 입자 수</h2>
+          <div class="seg sm" id="chartSeg">
+            <button data-c="bar" aria-pressed="true">막대</button>
+            <button data-c="pie" aria-pressed="false">원</button>
+            <button data-c="line" aria-pressed="false">선</button>
+          </div>
+        </div>
+        <div id="cBar"><div class="bars" id="bars"></div></div>
+        <div id="cPie" hidden>
+          <canvas class="chartc" id="pieCv"></canvas>
+          <p class="ccap">물 분자는 빼고 이온만 나타냈어요.</p>
+        </div>
+        <div id="cLine" hidden>
+          <canvas class="chartc" id="lineCv"></canvas>
+          <div class="clegend" id="lineLegend"></div>
+          <p class="ccap">넣은 부피에 따른 이온 수 변화예요. 물 분자는 빼고 나타냈어요.</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ===== 단계별 비교 ===== -->
+  <section class="card" id="cmpView" hidden>
+    <div class="ctrl">
+      <span class="lbl">섞는 비율<br><small style="color:var(--ink-3)">염산 : 수산화 나트륨 (mL)</small></span>
+      <div class="chips" id="chips"></div>
+      <span class="lbl">표시</span>
+      <div class="row">
+        <label class="switch"><input type="checkbox" id="showAns" checked> 입자 수와 액성(BTB 색) 보이기</label>
+        <button class="btn btn-sub" id="saveBtn" style="padding:8px 14px">이미지로 저장</button>
+      </div>
+    </div>
+    <div class="snaps" id="snaps"></div>
+    <div class="tempbox">
+      <h2>섞는 비율에 따른 온도와 액성 변화</h2>
+      <canvas id="tempCv"></canvas>
+      <p class="ccap">위 비커 (가)~(마)와 같은 혼합 용액이에요. 두 용액의 처음 온도는 같고, 1배끼리 섞으면 교과서 값(23 → 25.5 → 28 °C)과 같게 맞췄어요. 다른 농도에서는 경향을 보여 주는 예시 값이에요.</p>
+    </div>
+    <div class="legend" id="legend2" style="margin-top:14px"></div>
+    <p class="note" style="max-width:none">※ 모형의 개수는 실제 입자 수가 아니라, 이온 수의 <b>상대적인 비</b>를 나타낸 것입니다. (두 용액을 합친 전체 부피 <span class="f">12 mL</span>, 위에서 고른 농도 기준)</p>
+  </section>
+  </main>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ================= 공통 설정 =================
+  const HCL_VOL = 20, STEP = 5, UNIT = 1;   // 기준 농도(1배) 5 mL 속 이온 1쌍 → 염산 20 mL(1배) 속 H⁺, Cl⁻ 각 4개
+  let CAP = 100;                                    // 비커 눈금 최댓값(농도 조합에 맞춰 자동)
+  // 교과서 그림 I-19와 같은 이온 모형: 글자가 들어간 공 하나
+  const MODEL = {
+    H:  { r:12, base:'#b9c0c9', light:'#ffffff', t:'H',  sup:'+' },
+    Cl: { r:17, base:'#2f9a3c', light:'#a8e89c', t:'Cl', sup:'−' },
+    Na: { r:15, base:'#e2b300', light:'#fff4a8', t:'Na', sup:'+' },
+    OH: { r:17, base:'#b2479b', light:'#f3bfe6', t:'OH', sup:'−' },
+    W:  { rx:22, ry:13.5, base:'#1d9fd6', light:'#a6e6fa', t:'H₂O' },
+  };
+  const NAMES = { H:['H⁺','수소 이온'], Cl:['Cl⁻','염화 이온'], Na:['Na⁺','나트륨 이온'], OH:['OH⁻','수산화 이온'], W:['H₂O','물'] };
+  const SERIES = { H:'#9aa5b1', Cl:'#2f9a3c', Na:'#e2b300', OH:'#b2479b', W:'#1d9fd6' };
+  const ION_KEYS = ['H','Cl','Na','OH'];
+  const BTB = { acid:[236,205,72], neutral:[120,182,110], base:[86,138,206], none:[196,206,218] };
+  const KO_LABEL = ['가','나','다','라','마','바','사','아','자','차','카','타','파'];
+
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  const B = { l:80, r:520, bottom:570, rim:118 };
+  let PX_PER_ML = 4.3;
+  const yOfVol = v => B.bottom - v * PX_PER_ML;
+  const inner = { l:B.l+6, r:B.r-6 };
+  let PAD = 20;
+  let SM = 1;                                   // 입자가 빽빽할 때 모형 크기 자동 축소
+  const minD = () => 46*SM, repD = () => 44*SM;
+
+  let ca = 1, cb = 1;                               // 염산, 수산화 나트륨 수용액 농도(배)
+  const P = () => (HCL_VOL/STEP) * UNIT * ca;       // 처음 H⁺ 수
+  const eqPortions = () => P() / cb;                // 중화점까지 넣는 횟수(소수 가능)
+  const eqVol = () => eqPortions() * STEP;
+  const maxPortions = () => Math.min(Math.ceil(2*eqPortions() - 1e-9), 16);   // 중화점의 약 2배, 최대 80 mL
+
+  function countsAt(n){
+    const b = n*cb, p = P();
+    return { H:Math.max(0,p-b), Cl:p, Na:b, OH:Math.max(0,b-p), W:Math.min(p,b) };
+  }
+  const tempAt = n => { const c = countsAt(n); return 20 + 30 * c.W / (HCL_VOL + n*STEP); };
+  function computeSM(){
+    let minA = Infinity;
+    for(let n=0;n<=maxPortions();n++){
+      const c = countsAt(n), tot = c.H+c.Cl+c.Na+c.OH+c.W;
+      const b = liquidBox(HCL_VOL+n*STEP);
+      const area = (b.x1-b.x0)*Math.max(10,b.y1-b.y0);
+      minA = Math.min(minA, area/tot);
+    }
+    SM = Math.max(0.62, Math.min(1, Math.sqrt(minA)/50));
+  }
+  const drawP = (c, type, x, y, s=1, a=1, rot=0) => drawModelOn(c, type, x, y, s*SM, a, rot);
+  function natureOf(c){
+    if(c.H>0) return {name:'산성', col:BTB.acid};
+    if(c.OH>0) return {name:'염기성', col:BTB.base};
+    return {name:'중성', col:BTB.neutral};
+  }
+
+  let gid = 0;
+  function svgModel(type, size){
+    const m = MODEL[type], id = 'g'+(++gid);
+    const rx = m.rx || m.r, ry = m.ry || m.r;
+    const fs = type==='W' ? 10 : Math.min(13, m.r*0.8);
+    const label = m.sup
+      ? `<tspan>${m.t}</tspan><tspan font-size="${fs*0.75}" dy="${-fs*0.45}">${m.sup}</tspan>`
+      : m.t;
+    return `<svg width="${size}" height="${size}" viewBox="-24 -24 48 48" aria-hidden="true" style="display:block">
+      <defs><radialGradient id="${id}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="${m.light}"/><stop offset=".55" stop-color="${m.base}"/><stop offset="1" stop-color="${m.base}" stop-opacity=".95"/></radialGradient></defs>
+      <ellipse cx="0" cy="0" rx="${rx}" ry="${ry}" fill="url(#${id})" stroke="rgba(0,0,0,.22)" stroke-width="1"/>
+      <text x="${m.sup?-2:0}" y="1" fill="#1f2933" font-size="${fs}" font-weight="700" text-anchor="middle" dominant-baseline="central" font-family="Noto Sans KR,sans-serif">${label}</text></svg>`;
+  }
+
+  function drawModelOn(c, type, x, y, s=1, alpha=1){
+    const m = MODEL[type];
+    const rx = m.rx || m.r, ry = m.ry || m.r;
+    c.save();
+    c.globalAlpha = alpha;
+    c.translate(x,y); c.scale(s,s);
+    const g = c.createRadialGradient(-rx*0.35, -ry*0.4, 1, 0, 0, Math.max(rx,ry)*1.05);
+    g.addColorStop(0, m.light); g.addColorStop(0.55, m.base); g.addColorStop(1, m.base);
+    c.beginPath(); c.ellipse(0,0,rx,ry,0,0,Math.PI*2);
+    c.fillStyle = g; c.fill();
+    c.lineWidth = 1; c.strokeStyle = 'rgba(0,0,0,0.22)'; c.stroke();
+    const fs = type==='W' ? 11 : Math.min(13.5, m.r*0.82);
+    c.fillStyle = '#1f2933'; c.textBaseline='middle';
+    c.font = `700 ${fs}px "Noto Sans KR", sans-serif`;
+    if(m.sup){
+      const w = c.measureText(m.t).width, sw = fs*0.5;
+      const x0 = -(w+sw)/2;
+      c.textAlign='left'; c.fillText(m.t, x0, 1);
+      c.font = `700 ${fs*0.75}px "Noto Sans KR", sans-serif`;
+      c.fillText(m.sup, x0+w+0.5, 1-fs*0.42);
+    } else {
+      c.textAlign='center'; c.fillText(m.t, 0, 1);
+    }
+    c.restore();
+  }
+
+  function liquidBox(v){
+    const top = yOfVol(v);
+    return { x0: inner.l + PAD, x1: inner.r - PAD, y0: top + PAD, y1: B.bottom - PAD };
+  }
+  function absPos(p, v){
+    const b = liquidBox(v);
+    return { x: b.x0 + p.fx*(b.x1-b.x0), y: b.y0 + p.fy*(b.y1-b.y0) };
+  }
+
+  function drawBeakerOn(c, v, tintArr, ticks){
+    const top = yOfVol(v);
+    c.save();
+    // 유리 안쪽
+    c.fillStyle = 'rgba(214,228,238,0.28)';
+    c.fillRect(B.l, B.rim, B.r-B.l, B.bottom-B.rim);
+    c.fillStyle = `rgba(${tintArr.map(Math.round).join(',')},0.28)`;
+    c.beginPath();
+    c.moveTo(inner.l, top); c.lineTo(inner.r, top);
+    c.lineTo(inner.r, B.bottom-10);
+    c.quadraticCurveTo(inner.r, B.bottom-4, inner.r-6, B.bottom-4);
+    c.lineTo(inner.l+6, B.bottom-4);
+    c.quadraticCurveTo(inner.l, B.bottom-4, inner.l, B.bottom-10);
+    c.closePath(); c.fill();
+    c.strokeStyle = `rgba(${tintArr.map(v=>Math.round(v*.75)).join(',')},0.6)`;
+    c.lineWidth = 1.5;
+    c.beginPath(); c.moveTo(inner.l, top); c.lineTo(inner.r, top); c.stroke();
+
+    // 유리 반사
+    c.strokeStyle = 'rgba(255,255,255,0.75)'; c.lineWidth = 6; c.lineCap='round';
+    c.beginPath(); c.moveTo(B.l+16, B.rim+30); c.lineTo(B.l+16, B.bottom-30); c.stroke();
+    c.lineCap='butt';
+    c.strokeStyle = '#7d8fa0'; c.lineWidth = 2.5; c.lineJoin='round';
+    c.beginPath();
+    c.moveTo(B.l-12, B.rim-6);
+    c.quadraticCurveTo(B.l, B.rim-4, B.l, B.rim+8);
+    c.lineTo(B.l, B.bottom-14);
+    c.quadraticCurveTo(B.l, B.bottom, B.l+14, B.bottom);
+    c.lineTo(B.r-14, B.bottom);
+    c.quadraticCurveTo(B.r, B.bottom, B.r, B.bottom-14);
+    c.lineTo(B.r, B.rim);
+    c.stroke();
+    if(ticks){
+      c.strokeStyle = '#7b8794'; c.lineWidth = 1.2;
+      c.fillStyle = '#616e7c'; c.font = '500 12px "Noto Sans KR", sans-serif';
+      c.textBaseline='middle';
+      for(let vv=10; vv<=CAP; vv+=10){
+        const y = yOfVol(vv);
+        const len = vv%(CAP<=60?20:50)===0 ? 14 : 8;
+        c.beginPath(); c.moveTo(B.r, y); c.lineTo(B.r+len, y); c.stroke();
+        if(CAP<=60 || vv%20===0){ c.textAlign='left'; c.fillText(vv, B.r+len+5, y); }
+      }
+      c.textAlign='left';
+      c.fillText('mL', B.r+12, yOfVol(CAP)-18);
+    }
+    c.restore();
+  }
+
+  // ================= 실험하기 =================
+  const cv = document.getElementById('cv');
+  const ctx = cv.getContext('2d');
+  const W = 600, H = 600;
+  cv.width = W * dpr; cv.height = H * dpr;
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+
+  let added = 0, busy = false, runToken = 0;
+  let particles = [];
+  let vol = HCL_VOL, volShown = HCL_VOL;
+  let tint = BTB.acid.slice(), tintTarget = BTB.acid.slice();
+  let nextId = 1;
+  let chartType = 'bar';
+
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+  const easeOutBack = t => { const c=1.6; return 1 + (c+1)*Math.pow(t-1,3) + c*Math.pow(t-1,2); };
+
+  function place(v){
+    const b = liquidBox(v);
+    const others = particles.map(p => absPos(p, v));
+    let best=null, bestD=-1;
+    for(let i=0;i<400;i++){
+      const fx = Math.random(), fy = Math.random();
+      const x = b.x0 + fx*(b.x1-b.x0), y = b.y0 + fy*(b.y1-b.y0);
+      let d = Infinity;
+      for(const o of others){ const dd=Math.hypot(o.x-x,o.y-y); if(dd<d) d=dd; }
+      if(d >= minD()) return {fx,fy};
+      if(d > bestD){ bestD=d; best={fx,fy}; }
+    }
+    return best;
+  }
+  function make(type, v){
+    const pos = place(v);
+    const p = { id:nextId++, type, fx:pos.fx, fy:pos.fy, ph:Math.random()*Math.PI*2, rot:(Math.random()-.5)*1.6, state:'idle' };
+    particles.push(p);
+    return p;
+  }
+
+  function reset(){
+    runToken++;
+    added = 0; busy = false; particles = []; vol = HCL_VOL; volShown = HCL_VOL;
+    for(let i=0;i<P();i++){ make('H',vol); make('Cl',vol); }
+    tintTarget = BTB.acid.slice(); tint = BTB.acid.slice();
+    updateUI();
+  }
+
+  async function addPortion(){
+    if(busy || added >= maxPortions()) return;
+    const token = runToken;
+    busy = true; updateUI();
+    added++; vol = HCL_VOL + added*STEP;
+
+    const news = [];
+    for(let i=0;i<cb;i++){ news.push(make('Na',vol)); news.push(make('OH',vol)); }
+    const now = performance.now();
+    news.forEach((p,i)=>{
+      p.state='fall'; p.t0=now + i*140; p.dur=850;
+      p.sx = 300 + (Math.random()-.5)*8; p.sy = 96;
+    });
+    await sleep(850 + news.length*140 + 250);
+    if(token !== runToken) return;
+
+    const freeH = particles.filter(p=>p.type==='H' && p.state==='idle');
+    const pairs = [];
+    for(const oh of news.filter(p=>p.type==='OH')){
+      if(!freeH.length) break;
+      const a = absPos(oh, vol);
+      let bi=0, bd=Infinity;
+      freeH.forEach((h,i)=>{ const b=absPos(h,vol); const d=Math.hypot(a.x-b.x,a.y-b.y); if(d<bd){bd=d;bi=i;} });
+      pairs.push([oh, freeH.splice(bi,1)[0]]);
+    }
+    const t1 = performance.now();
+    pairs.forEach(([oh,h],i)=>{
+      const mfx=(oh.fx+h.fx)/2, mfy=(oh.fy+h.fy)/2;
+      for(const p of [oh,h]){
+        p.state='react'; p.t0=t1+i*380; p.dur=1000;
+        p.ofx=p.fx; p.ofy=p.fy; p.mfx=mfx; p.mfy=mfy;
+      }
+      oh.partner=h.id;
+    });
+    if(pairs.length) await sleep(1000 + (pairs.length-1)*380 + 350);
+    if(token !== runToken) return;
+
+    busy = false;
+    updateUI();
+  }
+
+  // ---------- 막대 ----------
+  const bars = document.getElementById('bars');
+  const rows = ['H','Cl','Na','OH',null,'W'];
+  bars.innerHTML = rows.map(k => !k ? '<div class="divider"></div>' :
+    `<div class="bar"><span class="lab">${svgModel(k,34)}${NAMES[k][0]}</span>
+     <div class="track"><div class="fill" id="f_${k}" style="background:${SERIES[k]}"></div></div>
+     <span class="n f" id="n_${k}">0</span></div>`).join('');
+  let BAR_MAX = 12;
+
+  // ---------- 원그래프 ----------
+  const pieCv = document.getElementById('pieCv');
+  const PIE_W = 320, PIE_H = 210;
+  pieCv.width = PIE_W*dpr; pieCv.height = PIE_H*dpr;
+  const pctx = pieCv.getContext('2d');
+  function drawPie(c){
+    pctx.setTransform(dpr,0,0,dpr,0,0);
+    pctx.clearRect(0,0,PIE_W,PIE_H);
+    const total = ION_KEYS.reduce((s,k)=>s+c[k],0);
+    const cx = 100, cy = 105, R0 = 92;
+    let a0 = -Math.PI/2;
+    for(const k of ION_KEYS){
+      if(!c[k]) continue;
+      const a1 = a0 + c[k]/total*Math.PI*2;
+      pctx.beginPath(); pctx.moveTo(cx,cy); pctx.arc(cx,cy,R0,a0,a1); pctx.closePath();
+      pctx.fillStyle = k==='H' ? '#dde2e8' : SERIES[k];
+      pctx.fill();
+      pctx.strokeStyle = '#fff'; pctx.lineWidth = 2; pctx.stroke();
+      const am = (a0+a1)/2;
+      const tx = cx + Math.cos(am)*R0*0.62, ty = cy + Math.sin(am)*R0*0.62;
+      pctx.fillStyle = (k==='H'||k==='Na') ? '#1f2933' : '#fff';
+      pctx.font = '700 15px "Noto Sans KR", sans-serif';
+      pctx.textAlign='center'; pctx.textBaseline='middle';
+      pctx.fillText(c[k], tx, ty);
+      a0 = a1;
+    }
+    pctx.beginPath(); pctx.arc(cx,cy,R0,0,Math.PI*2); pctx.strokeStyle='#cbd2d9'; pctx.lineWidth=1; pctx.stroke();
+    // 범례
+    let y = 40;
+    for(const k of ION_KEYS){
+      pctx.fillStyle = k==='H' ? '#dde2e8' : SERIES[k];
+      pctx.strokeStyle = '#9aa5b1'; pctx.lineWidth = 1;
+      pctx.beginPath(); pctx.roundRect ? pctx.roundRect(210, y-7, 14, 14, 3) : pctx.rect(210,y-7,14,14); pctx.fill(); pctx.stroke();
+      pctx.fillStyle = c[k] ? '#1f2933' : '#9aa5b1';
+      pctx.font = '500 15px "Noto Sans KR", sans-serif';
+      pctx.textAlign='left'; pctx.textBaseline='middle';
+      pctx.fillText(NAMES[k][0], 232, y);
+      pctx.textAlign='right';
+      const pct = total ? Math.round(c[k]/total*100) : 0;
+      pctx.fillText(`${c[k]}개`, 300, y);
+      pctx.font = '500 11px "Noto Sans KR", sans-serif';
+      pctx.fillStyle = '#8794a3';
+      pctx.fillText(`${pct}%`, 300, y+15);
+      y += 40;
+    }
+  }
+
+  // ---------- 선그래프 ----------
+  const lineCv = document.getElementById('lineCv');
+  const LW = 320, LH = 230;
+  lineCv.width = LW*dpr; lineCv.height = LH*dpr;
+  const lctx = lineCv.getContext('2d');
+  document.getElementById('lineLegend').innerHTML = ION_KEYS.map(k=>`<span><i style="background:${SERIES[k]}"></i><span class="f">${NAMES[k][0]}</span></span>`).join('');
+  function drawLine(){
+    const c = lctx;
+    c.setTransform(dpr,0,0,dpr,0,0);
+    c.clearRect(0,0,LW,LH);
+    const L = 38, Rr = 12, T = 12, Bt = 42;
+    const pw = LW-L-Rr, ph = LH-T-Bt;
+    const maxN = maxPortions(), maxV = maxN*STEP;
+    const yMax = Math.ceil(Math.max(P(), maxN*cb)/2)*2;
+    const yStep = yMax > 16 ? 4 : 2;
+    const X = v => L + v/maxV*pw, Y = n => T + ph - n/yMax*ph;
+    // 격자
+    c.font = '500 11px "Noto Sans KR", sans-serif';
+    c.fillStyle = '#616e7c'; c.strokeStyle = '#e4e9ef'; c.lineWidth = 1;
+    c.textAlign='right'; c.textBaseline='middle';
+    for(let n=0;n<=yMax;n+=yStep){ c.beginPath(); c.moveTo(L,Y(n)); c.lineTo(L+pw,Y(n)); c.stroke(); c.fillText(n, L-6, Y(n)); }
+    c.textAlign='center'; c.textBaseline='top';
+    const tickStep = maxN > 8 ? 2 : 1;
+    for(let i=0;i<=maxN;i+=tickStep){ const v=i*STEP; c.beginPath(); c.moveTo(X(v),T+ph); c.lineTo(X(v),T+ph+4); c.strokeStyle='#9aa5b1'; c.stroke(); c.fillText(v, X(v), T+ph+6); }
+    // 중화점 표시
+    const eqV = eqVol();
+    c.save(); c.setLineDash([4,4]); c.strokeStyle='#9aa5b1';
+    c.beginPath(); c.moveTo(X(eqV),T); c.lineTo(X(eqV),T+ph); c.stroke(); c.restore();
+    c.strokeStyle='#52606d'; c.lineWidth=1.2;
+    c.beginPath(); c.moveTo(L,T); c.lineTo(L,T+ph); c.lineTo(L+pw,T+ph); c.stroke();
+    c.fillStyle='#52606d'; c.font='12px "Noto Sans KR", sans-serif';
+    c.fillText('넣은 수산화 나트륨 수용액의 부피(mL)', L+pw/2, T+ph+22);
+    c.save(); c.translate(11, T+ph/2); c.rotate(-Math.PI/2); c.textBaseline='middle'; c.fillText('이온 수(상댓값)', 0, 0); c.restore();
+    // 선 (현재까지)
+    const offs = {H:-1.2, Cl:0, Na:1.2, OH:2.4};    // 겹침 구분용 살짝 띄움
+    for(const k of ION_KEYS){
+      c.strokeStyle = SERIES[k]; c.lineWidth = 2.4; c.lineJoin='round';
+      c.beginPath();
+      for(let i=0;i<=added;i++){ const n=countsAt(i)[k]; const x=X(i*STEP), y=Y(n)+offs[k]; i?c.lineTo(x,y):c.moveTo(x,y); }
+      c.stroke();
+      for(let i=0;i<=added;i++){ const n=countsAt(i)[k];
+        c.beginPath(); c.arc(X(i*STEP), Y(n)+offs[k], 3.2, 0, Math.PI*2); c.fillStyle='#fff'; c.fill(); c.lineWidth=1.8; c.stroke(); }
+    }
+  }
+
+  // ---------- UI ----------
+  const addBtn = document.getElementById('addBtn');
+  function tokens(el, n){
+    let h='';
+    for(let i=0;i<n;i++) h += el==='HCl' ? svgModel('H',40)+svgModel('Cl',40) : svgModel('Na',40)+svgModel('OH',40);
+    return h;
+  }
+  const mkLegend = () => ['H','Cl','Na','OH','W'].map(k =>
+    `<span>${svgModel(k,36)}<span class="f">${NAMES[k][0]}</span><span class="nm">${NAMES[k][1]}${k==='W'?' (생성)':''}</span></span>`).join('');
+  document.getElementById('legend').innerHTML = mkLegend();
+  document.getElementById('legend2').innerHTML = mkLegend();
+
+  function updateUI(){
+    document.querySelectorAll('#segA button').forEach(b=>{ b.setAttribute('aria-pressed', String(+b.dataset.v===ca)); b.disabled = busy; });
+    document.querySelectorAll('#segB button').forEach(b=>{ b.setAttribute('aria-pressed', String(+b.dataset.v===cb)); b.disabled = busy; });
+    document.getElementById('tokHCl').innerHTML = tokens('HCl',ca);
+    document.getElementById('tokNaOH').innerHTML = tokens('NaOH',cb);
+
+    const done = added >= maxPortions();
+    addBtn.disabled = busy || done;
+    addBtn.textContent = done ? '더 넣을 수 없어요' : '5 mL 넣기';
+    document.getElementById('sAdded').innerHTML = `${added*STEP} <small>mL</small>`;
+    document.getElementById('sTotal').innerHTML = `${HCL_VOL+added*STEP} <small>mL</small>`;
+
+    if(!busy){
+      const c = countsAt(added);
+      for(const k of ['H','Cl','Na','OH','W']){
+        document.getElementById('f_'+k).style.width = (c[k]/BAR_MAX*100)+'%';
+        document.getElementById('n_'+k).textContent = c[k];
+      }
+      const nat = natureOf(c);
+      document.getElementById('sNature').textContent = nat.name;
+      tintTarget = nat.col.slice();
+      drawPie(c);
+      drawLine();
+    }
+  }
+
+  document.querySelectorAll('#segA button').forEach(b => b.addEventListener('click', () => { if(!busy) setConc(+b.dataset.v, cb); }));
+  document.querySelectorAll('#segB button').forEach(b => b.addEventListener('click', () => { if(!busy) setConc(ca, +b.dataset.v); }));
+  addBtn.addEventListener('click', addPortion);
+  document.getElementById('resetBtn').addEventListener('click', reset);
+
+  document.querySelectorAll('#chartSeg button').forEach(b => b.addEventListener('click', () => {
+    chartType = b.dataset.c;
+    document.querySelectorAll('#chartSeg button').forEach(x=>x.setAttribute('aria-pressed', String(x===b)));
+    document.getElementById('cBar').hidden = chartType!=='bar';
+    document.getElementById('cPie').hidden = chartType!=='pie';
+    document.getElementById('cLine').hidden = chartType!=='line';
+  }));
+
+  function drawPipette(active){
+    const x = 300;
+    ctx.save();
+    ctx.globalAlpha = active ? 1 : .55;
+    ctx.strokeStyle = '#52606d'; ctx.lineWidth = 2; ctx.fillStyle = '#ffffff';
+    ctx.beginPath(); ctx.ellipse(x, 18, 13, 15, 0, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x-7, 32); ctx.lineTo(x-7, 74); ctx.lineTo(x-2, 92); ctx.lineTo(x+2, 92); ctx.lineTo(x+7, 74); ctx.lineTo(x+7, 32);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = 'rgba(86,138,206,0.18)'; ctx.fillRect(x-5.5, 50, 11, 24);
+    ctx.fillStyle = '#52606d'; ctx.font = '13px "Noto Sans KR", sans-serif'; ctx.textAlign='left';
+    ctx.fillText('수산화 나트륨 수용액', x+18, 40);
+    ctx.restore();
+  }
+
+  function frame(now){
+    volShown += (vol - volShown) * 0.06;
+    for(let i=0;i<3;i++) tint[i] += (tintTarget[i]-tint[i]) * 0.05;
+
+    const done = particles.filter(p => p.state==='react' && p.type==='OH' && now >= p.t0 + p.dur);
+    for(const oh of done){
+      particles = particles.filter(p => p.id!==oh.id && p.id!==oh.partner);
+      particles.push({ id:nextId++, type:'W', fx:oh.mfx, fy:oh.mfy, ph:Math.random()*6.28, rot:(Math.random()-.5)*1.2, state:'idle', born:now });
+    }
+
+    // 겹친 입자 살짝 밀어내기
+    const idle = particles.filter(p=>p.state==='idle');
+    const bx = liquidBox(volShown), bw = bx.x1-bx.x0, bh = Math.max(1,bx.y1-bx.y0);
+    for(let i=0;i<idle.length;i++) for(let j=i+1;j<idle.length;j++){
+      const a=idle[i], b=idle[j];
+      const dx=(a.fx-b.fx)*bw, dy=(a.fy-b.fy)*bh, d=Math.hypot(dx,dy)||0.01;
+      if(d<repD()){ const push=(repD()-d)*0.04; const ux=dx/d, uy=dy/d;
+        a.fx+=ux*push/bw; a.fy+=uy*push/bh; b.fx-=ux*push/bw; b.fy-=uy*push/bh; }
+    }
+    for(const p of idle){ p.fx=Math.min(1,Math.max(0,p.fx)); p.fy=Math.min(1,Math.max(0,p.fy)); }
+
+    ctx.clearRect(0,0,W,H);
+    drawPipette(busy);
+    drawBeakerOn(ctx, volShown, tint, true);
+
+    const order = [...particles].sort((a,b)=> (a.state==='fall') - (b.state==='fall'));
+    for(const p of order){
+      const jx = Math.sin(now*0.0009 + p.ph)*2.5, jy = Math.cos(now*0.0011 + p.ph*1.3)*2.5;
+      const wob = p.rot + Math.sin(now*0.0006+p.ph)*0.12;
+      if(p.type==='W'){
+        const {x,y} = absPos(p, volShown);
+        const s = p.born ? Math.min(1, easeOutBack(Math.min(1,(now-p.born)/380))) : 1;
+        drawP(ctx, 'W', x+jx, y+jy, Math.max(0.01,s), 1, wob);
+        continue;
+      }
+      if(p.state==='fall'){
+        const k = Math.max(0, Math.min(1, (now-p.t0)/p.dur));
+        if(k<=0) continue;
+        const tgt = absPos(p, volShown);
+        const e = ease(k);
+        drawP(ctx, p.type, p.sx + (tgt.x-p.sx)*e, p.sy + (tgt.y-p.sy)*e, 0.6 + 0.4*Math.min(1,k*1.6), 1, p.rot);
+        if(k>=1) p.state='idle';
+        continue;
+      }
+      if(p.state==='react'){
+        const k = Math.max(0, Math.min(1, (now-p.t0)/p.dur));
+        const e = ease(k);
+        const {x,y} = absPos({fx:p.ofx+(p.mfx-p.ofx)*e, fy:p.ofy+(p.mfy-p.ofy)*e}, volShown);
+        const s = k>0.75 ? 1 - (k-0.75)/0.25*0.5 : 1;
+        drawP(ctx, p.type, x, y, s, k>0.8 ? 1-(k-0.8)/0.2 : 1, p.rot);
+        continue;
+      }
+      const {x,y} = absPos(p, volShown);
+      drawP(ctx, p.type, x+jx, y+jy, 1, 1, wob);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ================= 단계별 비교 =================
+  const CROP = { x:66, y:150, w:468, h:428 };
+  const SNAP_SCALE = 2;
+  let SNAP_BOOST = 1.8;     // 작은 카드에서도 잘 보이도록 모형 확대 (농도에 따라 자동)
+  let selected = [];
+  let showAns = true;
+  const snapCache = {};
+
+  function mulberry32(a){ return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+
+  // 교과서 그림 I-19·I-20 방식: 전체 12 mL, 섞는 비율만 바꿈
+  const TOT = 12, VA = [2,4,6,8,10];
+  const MIX_PX = 32;                       // 혼합 용액 비커 눈금(px/mL)
+  function countsMix(va){                  // 2 mL 속 이온 1쌍(1배 기준)
+    const A = ca*va/2, Bq = cb*(TOT-va)/2;
+    return { H:Math.max(0,A-Bq), Cl:A, Na:Bq, OH:Math.max(0,Bq-A), W:Math.min(A,Bq) };
+  }
+  const T0 = 20.5, KT = 1.25;              // 1배끼리 6 mL + 6 mL → 28 °C (교과서 값)
+  const tempMix = va => T0 + KT * Math.min(ca*va, cb*(TOT-va));
+  const fmtT = t => (Math.round(t*10)/10).toString();
+
+  function withMix(fn){
+    const keep = PX_PER_ML, keepPad = PAD;
+    PX_PER_ML = MIX_PX; PAD = Math.max(20, 19*SNAP_BOOST);
+    try { return fn(); } finally { PX_PER_ML = keep; PAD = keepPad; }
+  }
+
+  function snapParticles(va){
+    const key = va+'_'+ca+'_'+cb;
+    if(snapCache[key]) return snapCache[key];
+    return withMix(() => {
+      const rnd = mulberry32(va*131 + ca*17 + cb*59 + 7);
+      const c = countsMix(va);
+      const types = [];
+      for(const k of ['W','H','OH','Cl','Na']) for(let i=0;i<c[k];i++) types.push(k);
+      const b = liquidBox(TOT);
+      const MD = 46*SNAP_BOOST, RD = 44*SNAP_BOOST;
+      const list = [];
+      for(const t of types){
+        let best=null, bestD=-1;
+        for(let i=0;i<500;i++){
+          const fx=rnd(), fy=rnd();
+          const x=b.x0+fx*(b.x1-b.x0), y=b.y0+fy*(b.y1-b.y0);
+          let d=Infinity;
+          for(const o of list){ const q=absPos(o,TOT); const dd=Math.hypot(q.x-x,q.y-y); if(dd<d) d=dd; }
+          if(d>=MD){ best={fx,fy}; break; }
+          if(d>bestD){ bestD=d; best={fx,fy}; }
+        }
+        list.push({ type:t, fx:best.fx, fy:best.fy });
+      }
+      const bw=b.x1-b.x0, bh=Math.max(1,b.y1-b.y0);
+      for(let it=0; it<120; it++){
+        for(let i=0;i<list.length;i++) for(let j=i+1;j<list.length;j++){
+          const a=list[i], q=list[j];
+          const dx=(a.fx-q.fx)*bw, dy=(a.fy-q.fy)*bh, d=Math.hypot(dx,dy)||0.01;
+          if(d<RD){ const push=(RD-d)*0.25; const ux=dx/d, uy=dy/d;
+            a.fx+=ux*push/bw; a.fy+=uy*push/bh; q.fx-=ux*push/bw; q.fy-=uy*push/bh; }
+        }
+        for(const p of list){ p.fx=Math.min(1,Math.max(0,p.fx)); p.fy=Math.min(1,Math.max(0,p.fy)); }
+      }
+      return snapCache[key] = list;
+    });
+  }
+
+  function drawSnapOn(c, va){
+    const cnt = countsMix(va);
+    const tintArr = showAns ? natureOf(cnt).col : BTB.none;
+    const list = snapParticles(va);
+    withMix(() => {
+      drawBeakerOn(c, TOT, tintArr, false);
+      for(const p of list){
+        const {x,y} = absPos(p, TOT);
+        drawModelOn(c, p.type, x, y, SNAP_BOOST);
+      }
+    });
+  }
+
+  function defaultSel(){ return VA.slice(); }
+  function computeBoost(){
+    withMix(() => {
+      const b = liquidBox(TOT), area = (b.x1-b.x0)*(b.y1-b.y0);
+      const maxN = Math.max(...VA.map(va => { const c = countsMix(va); return c.H+c.Cl+c.Na+c.OH+c.W; }));
+      SNAP_BOOST = Math.max(1.25, Math.min(2.1, Math.sqrt(area/maxN)/52));
+    });
+  }
+
+  function renderChips(){
+    const el = document.getElementById('chips');
+    let h='';
+    for(const va of VA){
+      h += `<button class="chip" data-v="${va}" aria-pressed="${selected.includes(va)}"><span class="f">${va} : ${TOT-va}</span></button>`;
+    }
+    const vs = TOT*cb/(ca+cb);
+    h += `<span class="hint" style="margin:0 0 0 4px;align-self:center">중화되는 비율 — 염산 <span class="f">${fmtT(vs)} mL</span> : 수산화 나트륨 수용액 <span class="f">${fmtT(TOT-vs)} mL</span></span>`;
+    el.innerHTML = h;
+    el.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => {
+      const v = +b.dataset.v;
+      if(selected.includes(v)){ if(selected.length>1) selected = selected.filter(x=>x!==v); }
+      else selected = [...selected, v].sort((a,b)=>a-b);
+      renderChips(); renderSnaps();
+    }));
+  }
+
+  function renderSnaps(){
+    const wrap = document.getElementById('snaps');
+    wrap.innerHTML = '';
+    selected.forEach((va, i) => {
+      const cnt = countsMix(va);
+      const card = document.createElement('div');
+      card.className = 'snap';
+      card.innerHTML = `<div class="t"><b>(${KO_LABEL[i]})</b></div>
+        <div class="mix">묽은 염산 <span class="f">${va} mL</span> + 수산화 나트륨 수용액 <span class="f">${TOT-va} mL</span></div>`;
+      const cvs = document.createElement('canvas');
+      cvs.width = CROP.w*SNAP_SCALE; cvs.height = CROP.h*SNAP_SCALE;
+      const c = cvs.getContext('2d');
+      c.setTransform(SNAP_SCALE,0,0,SNAP_SCALE,-CROP.x*SNAP_SCALE,-CROP.y*SNAP_SCALE);
+      drawSnapOn(c, va);
+      card.appendChild(cvs);
+      if(showAns){
+        const row = document.createElement('div');
+        row.className = 'cnt';
+        row.innerHTML = ['H','Cl','Na','OH','W'].map(k=>`<div>${svgModel(k,28)}<span class="f">${cnt[k]}</span></div>`).join('');
+        card.appendChild(row);
+        const nat = document.createElement('div');
+        nat.className = 'nat';
+        nat.innerHTML = `<span class="f">${fmtT(tempMix(va))} °C</span> · <b>${natureOf(cnt).name}</b>`;
+        card.appendChild(nat);
+      }
+      wrap.appendChild(card);
+    });
+    renderTemp();
+  }
+
+  // ---------- 온도 그래프 ----------
+  const tempCv = document.getElementById('tempCv');
+  const TW = 1000, TH = 460;
+  tempCv.width = TW*dpr; tempCv.height = TH*dpr;
+  function drawTempOn(c, x0, y0, w, h){
+    // 교과서 그림 I-20 방식: 전체 부피 12 mL, 두 용액을 섞는 비율만 바꿈
+    const tOf = tempMix;
+    const natOf = va => { const d = ca*va - cb*(TOT-va); return Math.abs(d)<1e-9 ? '중성' : d>0 ? '산성' : '염기성'; };
+    const vStar = TOT*cb/(ca+cb), peak = tOf(vStar);
+    const L = 64, R = 150, T = 36, Bt = 70;
+    const pw = w-L-R, ph = h-T-Bt;
+    const tStep = 2.5 * Math.max(1, Math.ceil((peak-T0)/(2.5*5)));
+    const yMax = T0 + Math.ceil((peak-T0)/tStep + 0.4)*tStep;
+    const X = va => x0 + L + va/TOT*pw, Y = t => y0 + T + ph - (t-T0)/(yMax-T0)*(ph-22) - 22;
+    const base = y0+T+ph;
+    c.save();
+    // 격자
+    c.lineWidth = 1; c.strokeStyle = '#e4e9ef';
+    c.save(); c.setLineDash([3,4]);
+    for(const va of VA){ c.beginPath(); c.moveTo(X(va), y0+T); c.lineTo(X(va), base); c.stroke(); }
+    for(let t=T0; t<=yMax+1e-9; t+=tStep){ c.beginPath(); c.moveTo(x0+L, Y(t)); c.lineTo(x0+L+pw, Y(t)); c.stroke(); }
+    c.restore();
+    c.font = '500 13px "Noto Sans KR", sans-serif'; c.fillStyle = '#323f4b';
+    c.textAlign='right'; c.textBaseline='middle';
+    for(let t=T0; t<=yMax+1e-9; t+=tStep) c.fillText(+t.toFixed(1), x0+L-10, Y(t));
+    c.fillText('0', x0+L-10, base);
+    // 축 (물결 표시로 0~T0 생략)
+    c.strokeStyle='#52606d'; c.lineWidth=1.3;
+    c.beginPath(); c.moveTo(x0+L, y0+T-10); c.lineTo(x0+L, base); c.lineTo(x0+L+pw+14, base); c.stroke();
+    c.beginPath(); c.moveTo(x0+L, y0+T-14); c.lineTo(x0+L-4, y0+T-6); c.moveTo(x0+L, y0+T-14); c.lineTo(x0+L+4, y0+T-6); c.stroke();
+    c.fillStyle='#fff'; c.fillRect(x0+L-6, base-14, 12, 7);
+    c.beginPath(); c.moveTo(x0+L-6, base-12); c.quadraticCurveTo(x0+L-3, base-15, x0+L, base-12); c.quadraticCurveTo(x0+L+3, base-9, x0+L+6, base-12);
+    c.moveTo(x0+L-6, base-8); c.quadraticCurveTo(x0+L-3, base-11, x0+L, base-8); c.quadraticCurveTo(x0+L+3, base-5, x0+L+6, base-8); c.stroke();
+    c.fillStyle='#323f4b'; c.font='13px "Noto Sans KR", sans-serif'; c.textAlign='left'; c.textBaseline='bottom';
+    c.fillText('온도(°C)', x0+L+8, y0+T-8);
+    // 가로축 두 줄
+    c.textAlign='center'; c.textBaseline='top'; c.font='500 14px "Noto Sans KR", sans-serif';
+    const r1 = base+10, r2 = base+32;
+    for(const va of VA){ c.fillText(va, X(va), r1); c.fillText(TOT-va, X(va), r2); }
+    c.textAlign='left'; c.font='13px "Noto Sans KR", sans-serif';
+    c.fillText('묽은 염산', x0, r1); c.fillText('수산화 나트륨', x0, r2); c.fillText('수용액', x0, r2+17);
+    c.fillText('부피(mL)', X(10)+26, r1);
+    // 곡선
+    const pts = VA.map(va => [va, tOf(va)]);
+    if(!VA.includes(vStar)) pts.push([vStar, peak]);
+    pts.sort((a,b)=>a[0]-b[0]);
+    c.strokeStyle='#e2404f'; c.lineWidth=2.6; c.lineJoin='round';
+    c.beginPath(); pts.forEach(([va,t],i)=> i?c.lineTo(X(va),Y(t)):c.moveTo(X(va),Y(t))); c.stroke();
+    for(const va of VA){ c.beginPath(); c.arc(X(va),Y(tOf(va)),4,0,Math.PI*2); c.fillStyle='#e2404f'; c.fill(); }
+    if(!VA.includes(vStar)){ c.beginPath(); c.arc(X(vStar),Y(peak),4,0,Math.PI*2); c.fillStyle='#fff'; c.fill(); c.lineWidth=1.8; c.stroke(); }
+    // 위 비커 카드와 연결: (가), (나) …
+    selected.forEach((va,i)=>{
+      const x=X(va), y=Y(tOf(va));
+      c.fillStyle='#1f2933'; c.font='700 15px "Noto Sans KR", sans-serif';
+      const nearPeak = showAns && Math.abs(va-vStar) < 0.6;
+      if(nearPeak){ c.textAlign='left'; c.textBaseline='middle'; c.fillText(`(${KO_LABEL[i]})`, x+10, y+6); }
+      else { c.textAlign='center'; c.textBaseline='bottom'; c.fillText(`(${KO_LABEL[i]})`, x, y-9); }
+    });
+    // BTB 색 · 액성
+    if(showAns){
+      const BTBC = { 산성:'#f5df3b', 중성:'#2fa84f', 염기성:'#1797d6' };
+      const BADGE = { 산성:'#f6b3c1', 중성:'#a8dba0', 염기성:'#8fd6ea' };
+      const dotY = Y(T0) - 0;
+      const badge = (txt, cx, cy) => {
+        c.font='700 14px "Noto Sans KR", sans-serif';
+        const bw = c.measureText(txt).width + 20;
+        c.fillStyle = BADGE[txt];
+        c.beginPath(); c.roundRect ? c.roundRect(cx-bw/2, cy-12, bw, 24, 5) : c.rect(cx-bw/2, cy-12, bw, 24); c.fill();
+        c.fillStyle='#1f2933'; c.textAlign='center'; c.textBaseline='middle'; c.fillText(txt, cx, cy+0.5);
+      };
+      const armY = (Y(T0) + Y(T0+tStep))/2;
+      const arrow = (xa, xb, txt) => {
+        if(xb-xa < 40) { if(xb-xa>0) badge(txt,(xa+xb)/2,armY); return; }
+        c.strokeStyle='#323f4b'; c.lineWidth=1.2;
+        c.beginPath(); c.moveTo(xa,armY); c.lineTo(xb,armY); c.stroke();
+        for(const [x,d] of [[xa,1],[xb,-1]]){ c.beginPath(); c.moveTo(x,armY); c.lineTo(x+7*d,armY-4); c.moveTo(x,armY); c.lineTo(x+7*d,armY+4); c.stroke(); }
+        badge(txt, (xa+xb)/2, armY);
+      };
+      arrow(X(2), X(Math.max(2,Math.min(10,vStar))), '염기성');
+      arrow(X(Math.max(2,Math.min(10,vStar))), X(10), '산성');
+      if(vStar>=2 && vStar<=10) badge('중성', X(vStar), Y(peak)-28);
+      for(const va of VA){
+        c.beginPath(); c.arc(X(va), dotY, 13, 0, Math.PI*2); c.fillStyle=BTBC[natOf(va)]; c.fill();
+      }
+      c.fillStyle='#323f4b'; c.font='13px "Noto Sans KR", sans-serif'; c.textAlign='left'; c.textBaseline='middle';
+      c.fillText('← BTB 용액을 넣은', X(10)+20, dotY-9);
+      c.fillText('    혼합 용액의 색', X(10)+20, dotY+9);
+    }
+    c.restore();
+  }
+  function renderTemp(){
+    const c = tempCv.getContext('2d');
+    c.setTransform(dpr,0,0,dpr,0,0); c.clearRect(0,0,TW,TH);
+    drawTempOn(c, 0, 0, TW, TH);
+  }
+
+  function renderCompare(){ renderChips(); renderSnaps(); }
+
+  document.getElementById('showAns').addEventListener('change', e => { showAns = e.target.checked; renderSnaps(); });
+
+  // ---------- 이미지 저장 ----------
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    const S = 2, cols = Math.min(5, selected.length), rowsN = Math.ceil(selected.length/cols);
+    const cw = 236, imgW = cw-24, imgH = imgW*CROP.h/CROP.w;
+    const ch = 60 + imgH + (showAns ? 92 : 14);
+    const gap = 14, pad = 20, noteH = 34, tempH = 460;
+    const Wd = Math.max(pad*2 + cols*cw + (cols-1)*gap, 1040);
+    const Ht = pad*2 + rowsN*ch + (rowsN-1)*gap + 20 + tempH + noteH;
+    const out = document.createElement('canvas');
+    out.width = Wd*S; out.height = Ht*S;
+    const c = out.getContext('2d');
+    c.scale(S,S);
+    c.fillStyle='#fff'; c.fillRect(0,0,Wd,Ht);
+    selected.forEach((n,i)=>{
+      const col=i%cols, row=Math.floor(i/cols);
+      const x0 = pad + col*(cw+gap), y0 = pad + row*(ch+gap);
+      c.strokeStyle='#dce2ea'; c.lineWidth=1;
+      c.beginPath(); c.roundRect ? c.roundRect(x0,y0,cw,ch,10) : c.rect(x0,y0,cw,ch); c.stroke();
+      c.fillStyle='#1f2933'; c.textBaseline='middle'; c.textAlign='left';
+      c.font='18px "Noto Sans KR", sans-serif'; c.fillText(`(${KO_LABEL[i]})`, x0+12, y0+22);
+      c.font='13px "Noto Sans KR", sans-serif'; c.fillStyle='#52606d';
+      c.fillText(`염산 ${n} mL + NaOH 수용액 ${TOT-n} mL`, x0+12, y0+46);
+      c.save();
+      c.translate(x0+12, y0+60);
+      const k = imgW/CROP.w; c.scale(k,k); c.translate(-CROP.x,-CROP.y);
+      drawSnapOn(c, n);
+      c.restore();
+      if(showAns){
+        const cnt = countsMix(n);
+        const keys=['H','Cl','Na','OH','W'], step=imgW/5;
+        keys.forEach((kk,j)=>{
+          const cx = x0+12 + step*(j+.5), cy = y0+60+imgH+18;
+          drawModelOn(c, kk, cx, cy, 0.6, 1, 0);
+          c.fillStyle='#1f2933'; c.font='600 15px "Noto Sans KR", sans-serif'; c.textAlign='center';
+          c.fillText(cnt[kk], cx, cy+26);
+        });
+        c.fillStyle='#52606d'; c.font='13px "Noto Sans KR", sans-serif'; c.textAlign='center';
+        c.fillText(`${fmtT(tempMix(n))} °C · ${natureOf(cnt).name}`, x0+cw/2, y0+ch-14);
+      }
+    });
+    drawTempOn(c, pad, pad + rowsN*ch + (rowsN-1)*gap + 20, Math.min(Math.max(Wd-pad*2, 900), 1000), tempH);
+    c.fillStyle='#52606d'; c.font='13px "Noto Sans KR", sans-serif'; c.textAlign='left'; c.textBaseline='middle';
+    c.fillText(`※ 모형의 개수는 실제 입자 수가 아니라 이온 수의 상대적인 비를 나타낸 것입니다. (묽은 염산 ${ca}배 + 수산화 나트륨 수용액 ${cb}배, 전체 12 mL)`, pad, Ht-pad-8);
+    const a = document.createElement('a');
+    a.download = `중화반응_혼합비율_염산${ca}배_NaOH${cb}배.png`;
+    a.href = out.toDataURL('image/png');
+    a.click();
+  });
+
+  // ================= 공통 =================
+  function setConc(a, b){
+    ca = a; cb = b;
+    CAP = Math.max(60, Math.ceil((HCL_VOL + maxPortions()*STEP)/10)*10);
+    PX_PER_ML = 430 / CAP;
+    computeSM();
+    BAR_MAX = Math.max(P(), maxPortions()*cb);
+    selected = defaultSel();
+    computeBoost();
+    reset();
+    renderCompare();
+  }
+
+  document.querySelectorAll('.tabs button').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected', String(x===b)));
+    const m = b.dataset.mode;
+    document.getElementById('expView').hidden = m!=='exp';
+    document.getElementById('cmpView').hidden = m!=='cmp';
+    if(m==='cmp') renderSnaps();
+  }));
+
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(()=>{
+    setConc(1, 1);
+    requestAnimationFrame(frame);
+  });
+})();
+</script>
+</body>
+</html>
